@@ -1,24 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Header from "./Layout/Header/Header";
+import Main from "./Layout/Main/Main";
+import { TodoContainer, BtnsContainer } from "./styles/stylesApp";
+import { Button } from "@mui/material";
+import { TodoCreatePortal } from "./components/TodoPortal/Portal/Portal";
+import debounce from "lodash.debounce";
 
 function App() {
+  const [opened, setOpened] = useState(false);
+  const handleOpenTodoPortal = () => {
+    setOpened(!opened);
+  };
+  const debouncedHandle = debounce(handleOpenTodoPortal, 500);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Main>
+        <BtnsContainer>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleOpenTodoPortal}
+          >
+            Add
+          </Button>
+          <Button variant="outlined" size="large">
+            Remove all
+          </Button>
+        </BtnsContainer>
+        <TodoContainer>wewefwe</TodoContainer>
+      </Main>
+      <TodoCreatePortal isOpened={opened} onClick={debouncedHandle} />
     </div>
   );
 }
