@@ -8,8 +8,13 @@ const portal = document.getElementById("portal");
 export const TodoCreatePortal: React.FC<ITodoCreate> = ({
   isOpened,
   onClick,
+  defaultState,
 }) =>
   ReactDom.createPortal(
-    <TodoCreateWindow isOpened={isOpened} onClick={onClick} />,
+    <TodoCreateWindow
+      isOpened={isOpened}
+      onClick={onClick}
+      defaultState={defaultState}
+    />,
     portal as HTMLElement
   );

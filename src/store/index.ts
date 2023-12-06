@@ -4,7 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
-  todos: todosReducer,
+  todosStore: todosReducer,
 });
 
 export const store = createStore(

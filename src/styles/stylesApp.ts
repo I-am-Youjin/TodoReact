@@ -7,6 +7,8 @@ export const TodoContainer = styled("div")`
   border: 2px solid #1976d2;
   padding: 10px;
   display: flex;
+  overflow: auto;
+  gap: 10px;
   flex-direction: column;
 `;
 

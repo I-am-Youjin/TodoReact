@@ -32,6 +32,12 @@ export const BtnsContainer = styled("div")`
   display: flex;
   justify-content: space-between;
 `;
+export const TagsContainer = styled("div")`
+  display: flex;
+  gap: 0.5em;
+  max-height: 5vh;
+  overflow: auto;
+`;
 
 export const InputsContainer = styled("div")`
   display: flex;
@@ -40,11 +46,11 @@ export const InputsContainer = styled("div")`
   justify-content: space-between;
 `;
 
-export const Text = styled("div")`
+export const Text = styled("p")`
   font-size: 16px;
   font-weight: 500;
 `;
-export const Tags = styled("div")`
+export const Tags = styled("p")`
   font-size: 16px;
   font-weight: 500;
   color: #1976d2;

@@ -1,6 +1,7 @@
 export interface ITodoCreate {
   isOpened: boolean;
   onClick: () => void;
+  defaultState?: ITodoData;
 }
 
 export interface ITodoData {
@@ -19,4 +20,7 @@ export type baseActionTypeWithPayload<T, P> = {
   payload: P;
 };
 
-export type defaultStateTypeTodos = Record<"todos", ITodoData[] | [] | null>;
+export type defaultStateTypeTodos = Record<
+  "todos" | "todosTags" | "unicTags" | "filter",
+  ITodoData[] | [] | null
+>;
