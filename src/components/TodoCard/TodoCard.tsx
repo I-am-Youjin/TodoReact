@@ -37,7 +37,6 @@ const TodoCard: React.FC<ITodoData> = ({ title, description, tag, id }) => {
   const handleEdit = () => {
     setOpenEdit(!openEdit);
   };
-  console.log(defaultState);
 
   return (
     <StyledContainer>

@@ -37,7 +37,7 @@ const names = [
 export default function MultipleSelectCheckmarks() {
   const tags = useTypedSelector((state) => state.todosStore.unicTags);
   const filter = useTypedSelector((state) => state.todosStore.filter);
-  const filterArr = (filter as string).split(", ");
+  const filterArr = (filter as string)?.split(", ");
   const [tagsName, setTagsName] = React.useState<string[]>([]);
   const { setFilter } = useActions();
 
