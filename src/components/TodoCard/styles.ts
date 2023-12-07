@@ -17,6 +17,7 @@ export const DataContainer = styled("div")<{ $width: string }>`
   padding: 10px;
   background-color: #fff;
   border-radius: 10px;
+  word-wrap: break-word;
 `;
 
 export const InnerContainer = styled("div")`

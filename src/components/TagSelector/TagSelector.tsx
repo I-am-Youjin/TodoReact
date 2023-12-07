@@ -8,18 +8,18 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import { useTypedSelector } from "../../store/hooks/useTypedSelector";
 import { useActions } from "../../store/hooks/useActions";
-import { $CombinedState } from "redux";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//   PaperProps: {
+//     style: {
+//       overflow: "hidden",
+//       height: "auto",
+//       wrap: "break-word",
+//     },
+//   },
+// };
 
 const names = [
   "Oliver Hansen",
@@ -37,6 +37,7 @@ const names = [
 export default function MultipleSelectCheckmarks() {
   const tags = useTypedSelector((state) => state.todosStore.unicTags);
   const filter = useTypedSelector((state) => state.todosStore.filter);
+  const filterArr = (filter as string).split(", ");
   const [tagsName, setTagsName] = React.useState<string[]>([]);
   const { setFilter } = useActions();
 
@@ -44,15 +45,13 @@ export default function MultipleSelectCheckmarks() {
     const {
       target: { value },
     } = event;
-    setTagsName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(", ") : value
-    );
+    setTagsName(typeof value === "string" ? value.split(", ") : value);
   };
 
   React.useEffect(() => {
     setFilter((tagsName as string[]).join(", "));
   }, [tagsName]);
+
   return (
     <div>
       <FormControl sx={{ m: 0, width: 300 }}>
@@ -62,7 +61,9 @@ export default function MultipleSelectCheckmarks() {
           value={tagsName}
           onChange={handleChange}
           input={<OutlinedInput label="Tag" />}
-          renderValue={(selected) => selected.join(", ")}
+          // MenuProps={MenuProps}
+          renderValue={(filterArr) => filterArr.join(", ")}
+          // renderValue={(selected) => selected.join(", ")}
         >
           {tags.map((tag) => (
             <MenuItem key={tag} value={tag}>

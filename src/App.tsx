@@ -50,7 +50,14 @@ function App() {
           {todos &&
             (todos as [])
               .filter((data: ITodoData) => {
-                return data.tag.includes(filter);
+                if (filter) {
+                  const filterArr = (filter as string).split(", ");
+                  for (let tag of filterArr) {
+                    if (data.tag.includes(tag)) {
+                      return data;
+                    }
+                  }
+                } else return data;
               })
               .map((data: ITodoData) => (
                 <TodoCard
