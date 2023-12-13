@@ -18,6 +18,13 @@ export const todosReducer = (
   action: baseActionTypeWithPayload<actionTypes, any>
 ) => {
   switch (action.type) {
+    case actionTypes.SET_STORE:
+      if (action.payload) {
+        return action.payload;
+      } else {
+        return state;
+      }
+
     case actionTypes.SET_TODO:
       return {
         ...state,
@@ -41,18 +48,15 @@ export const todosReducer = (
     case actionTypes.REMOVE_TODO:
       return {
         ...state,
-        todos: state.todos?.filter((todo, idx) => {
-          return (
-            idx !==
-            (action as baseActionTypeWithPayload<actionTypes, any>).payload
-          );
+        todos: state.todos?.filter((todo) => {
+          return todo.id !== action.payload;
         }),
       };
     case actionTypes.REMOVE_TAGS:
       return {
         ...state,
-        todosTags: state.todosTags.filter((tag, idx) => {
-          return idx !== (state.todosTags as string[]).indexOf(action.payload);
+        todosTags: state.todosTags.filter((tag) => {
+          return action.payload !== tag;
         }),
       };
     case actionTypes.REMOVE_UNICTAGS:

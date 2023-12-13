@@ -15,6 +15,7 @@ import { ITodoData } from "../../../types";
 import { useTypedSelector } from "../../../store/hooks/useTypedSelector";
 import { Button } from "@mui/material";
 import { useActions } from "../../../store/hooks/useActions";
+import { addData, Stores, deleteData } from "../../../lib/db";
 
 const TodoCreateWindow: React.FC<ITodoCreate> = ({
   isOpened,
@@ -25,11 +26,12 @@ const TodoCreateWindow: React.FC<ITodoCreate> = ({
   const inputRef = useRef(null);
   const textareaValue = inputRef?.current?.children[1]?.children[0].value;
   const inputValue = inputRef?.current?.children[0]?.children[0].value;
+  const [error, setError] = useState("");
 
   const TodoData: ITodoData = {
     title: "",
     description: "",
-    id: 0,
+    id: Date.now(),
     tag: "",
   };
 
@@ -39,6 +41,8 @@ const TodoCreateWindow: React.FC<ITodoCreate> = ({
   const [dynamicIdState, setDynamicIdState] = useState(dynamicId);
   const [todoTagsState, setTodoTagsState] = useState(TodoData.tag);
   const todos = useTypedSelector((state) => state.todosStore.todos);
+  const store = useTypedSelector((state) => state.todosStore);
+  const [todosStore, setTodosStore] = useState(store);
   const { setTodo, setTodoTags, removeTodo, removeTags, removeUnicTags } =
     useActions();
 
@@ -55,6 +59,7 @@ const TodoCreateWindow: React.FC<ITodoCreate> = ({
 
   useEffect(() => {
     setDynamicIdState(todos.length);
+    // setTodoDataState(defaultState);
   }, [todos.length]);
 
   const handleChangeValue = (
@@ -71,15 +76,14 @@ const TodoCreateWindow: React.FC<ITodoCreate> = ({
         return {
           ...prevData,
           [fieldName]: event.target.value,
-          id: dynamicIdState,
+          id: Date.now(),
         };
       }
     );
   };
 
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (defaultState) {
-      console.log(defaultState);
       const tags = defaultState.tag.split(", ");
       for (let tag of tags) {
         removeTags(tag);
@@ -98,6 +102,16 @@ const TodoCreateWindow: React.FC<ITodoCreate> = ({
           setTodoDataState(TodoData);
         }
         onClick();
+        await handleRemoveData(defaultState.id);
+        await handleAddDataToStoreDB(
+          {
+            title: todoDataState.title,
+            description: todoDataState.description,
+            id: todoDataState.id,
+            tag: todoTagsState,
+          },
+          defaultState.id
+        );
       }
       if (todoTagsState) {
         todoTagsState.split(", ").map((tag) => setTodoTags(tag));
@@ -114,9 +128,42 @@ const TodoCreateWindow: React.FC<ITodoCreate> = ({
           setTodoDataState(TodoData);
         }
         onClick();
+        handleAddDataToStoreDB(
+          {
+            title: todoDataState.title,
+            description: todoDataState.description,
+            id: todoDataState.id,
+            tag: todoTagsState,
+          },
+          todoDataState.id
+        );
       }
       if (todoTagsState) {
         todoTagsState.split(", ").map((tag) => setTodoTags(tag));
+      }
+    }
+  };
+
+  const handleAddDataToStoreDB = async (data, id) => {
+    try {
+      const res = await addData(Stores.TodosStore, { data, id });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
+    }
+  };
+
+  const handleRemoveData = async (id) => {
+    try {
+      await deleteData(Stores.TodosStore, id);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong deleting the user");
       }
     }
   };

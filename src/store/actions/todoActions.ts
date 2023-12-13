@@ -2,6 +2,7 @@ import { baseActionType, baseActionTypeWithPayload } from "../../types";
 import { ITodoData } from "../../types";
 
 export enum actionTypes {
+  SET_STORE = "SET_STORE",
   SET_TODO = "SET_TODO",
   SET_FILTER = "SET_FILTER",
   SET_TODO_TAGS = "SET_TODO_TAGS",
@@ -12,6 +13,9 @@ export enum actionTypes {
 }
 
 interface ITodoActions {
+  setStore: (
+    store: any
+  ) => baseActionTypeWithPayload<actionTypes.SET_STORE, any>;
   setTodo: (
     todo: ITodoData
   ) => baseActionTypeWithPayload<actionTypes.SET_TODO, ITodoData>;
@@ -34,6 +38,7 @@ interface ITodoActions {
 }
 
 export const todosActions: ITodoActions = {
+  setStore: (store) => ({ type: actionTypes.SET_STORE, payload: store }),
   setTodo: (todo) => ({ type: actionTypes.SET_TODO, payload: todo }),
   setFilter: (filter) => ({ type: actionTypes.SET_FILTER, payload: filter }),
   setTodoTags: (tags) => ({ type: actionTypes.SET_TODO_TAGS, payload: tags }),

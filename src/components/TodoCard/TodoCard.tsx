@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyledContainer,
   InnerContainer,
@@ -12,7 +12,7 @@ import { useActions } from "../../store/hooks/useActions";
 import { useTypedSelector } from "../../store/hooks/useTypedSelector";
 import EditIcon from "@mui/icons-material/Edit";
 import { TodoCreatePortal } from "../TodoPortal/Portal/Portal";
-import { debounce } from "lodash.debounce";
+import { Stores, deleteData } from "../../lib/db";
 
 const TodoCard: React.FC<ITodoData> = ({ title, description, tag, id }) => {
   const defaultState: ITodoData = {
@@ -22,7 +22,23 @@ const TodoCard: React.FC<ITodoData> = ({ title, description, tag, id }) => {
     id,
   };
   const { removeTodo, removeTags, removeUnicTags } = useActions();
+  const todos = useTypedSelector((state) => state.todosStore.todos);
+  const filter = useTypedSelector((state) => state.todosStore.filter);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [data, setData] = useState<ITodoData>(defaultState);
+  const [error, setError] = useState("");
+
+  const handleRemoveData = async (id) => {
+    try {
+      await deleteData(Stores.TodosStore, id);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong deleting the user");
+      }
+    }
+  };
 
   const handleRemoveTodo = () => {
     const tagsArray = tag.split(", ");
@@ -31,12 +47,22 @@ const TodoCard: React.FC<ITodoData> = ({ title, description, tag, id }) => {
       removeTags(tag);
       removeUnicTags(tag);
     }
-    removeTodo(defaultState.id);
+    removeTodo(id);
+    console.log(`${id}`);
+    handleRemoveData(id);
   };
 
   const handleEdit = () => {
     setOpenEdit(!openEdit);
   };
+
+  useEffect(() => {
+    setData(
+      todos.find((todo: ITodoData) => {
+        return todo.id === id;
+      })
+    );
+  }, [todos.length, filter]);
 
   return (
     <StyledContainer>
@@ -56,7 +82,7 @@ const TodoCard: React.FC<ITodoData> = ({ title, description, tag, id }) => {
       <TodoCreatePortal
         isOpened={openEdit}
         onClick={handleEdit}
-        defaultState={defaultState}
+        defaultState={data}
       ></TodoCreatePortal>
     </StyledContainer>
   );
